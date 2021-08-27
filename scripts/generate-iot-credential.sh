@@ -102,6 +102,5 @@ export AWS_IOT_CORE_CERT=$(pwd)"/"$iotCert
 export AWS_IOT_CORE_PRIVATE_KEY=$(pwd)"/"$iotPrivateKey
 export AWS_IOT_CORE_ROLE_ALIAS=$iotRoleAlias
 export AWS_IOT_CORE_THING_NAME=$thingName
+export CACERT_PATH_ENV_VAR=cacert.pem
         
-
-
