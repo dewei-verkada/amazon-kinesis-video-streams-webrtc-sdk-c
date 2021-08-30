@@ -974,6 +974,7 @@ STATUS getChannelEndpoint(PSignalingClient pSignalingClient, UINT64 time)
                         STRCPY(signalingFileCacheEntry.wssEndpoint, pSignalingClient->channelEndpointWss);
                         if (STATUS_FAILED(signalingCacheSaveToFile(&signalingFileCacheEntry, pSignalingClient->clientInfo.cacheFilePath))) {
                             DLOGW("Failed to save signaling cache to file");
+                            DLOGW("Cache file path: %s", pSignalingClient->clientInfo.cacheFilePath);
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-thingName="b7b6a3b8-a8c3-4d8b-956a-1b273254081f"
+thingName="00000000-0000-0000-0000-000000000000"
 iotRoleAlias="webrtc-camera-certificate-based-role-alias"
 iotCert="webrtc_iot_certificate.pem"
 iotPrivateKey="webrtc_iot_private.key"
@@ -15,3 +15,4 @@ export AWS_IOT_CORE_THING_NAME=$thingName
 export CACERT_PATH_ENV_VAR=$iotCaCert
 
 ./kvsWebrtcClientMaster
+
