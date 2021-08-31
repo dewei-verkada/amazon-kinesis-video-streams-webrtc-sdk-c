@@ -1,0 +1,292 @@
+{
+  "version": 4,
+  "terraform_version": "0.15.5",
+  "serial": 11,
+  "lineage": "4dab5e62-ab0d-2e01-d043-a0da8bf408fc",
+  "outputs": {},
+  "resources": [
+    {
+      "mode": "managed",
+      "type": "aws_iam_policy",
+      "name": "webrtc_camera_policy",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::584918145193:policy/webrtc-camera-policy",
+            "description": "Policy for camera to use KVS for WebRTC.",
+            "id": "arn:aws:iam::584918145193:policy/webrtc-camera-policy",
+            "name": "webrtc-camera-policy",
+            "name_prefix": null,
+            "path": "/",
+            "policy": "{\n   \"Version\":\"2012-10-17\",\n   \"Statement\":[\n      {\n          \"Effect\":\"Allow\",\n          \"Action\":[\n            \"kinesisvideo:DescribeSignalingChannel\",\n            \"kinesisvideo:GetSignalingChannelEndpoint\",\n            \"kinesisvideo:GetIceServerConfig\",\n            \"kinesisvideo:ConnectAsMaster\"\n          ],\n          \"Resource\":\"arn:aws:kinesisvideo:*:*:channel/\u0026{credentials-iot:ThingName}/*\"\n      }\n   ]\n}\n",
+            "policy_id": "ANPAYQL6WTCURGKZ4THXM",
+            "tags": {
+              "cost_center": "vstream",
+              "environment": "staging-sandbox",
+              "module": "services/vstream",
+              "repo": "Verkada-Backend",
+              "service": "vstream",
+              "terraform": "true",
+              "vertical": "streaming"
+            },
+            "tags_all": {
+              "cost_center": "vstream",
+              "environment": "staging-sandbox",
+              "module": "services/vstream",
+              "repo": "Verkada-Backend",
+              "service": "vstream",
+              "terraform": "true",
+              "vertical": "streaming"
+            }
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role",
+      "name": "webrtc_camera_certificate_based_role",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iam::584918145193:role/webrtc-camera-certificate-based-role",
+            "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"credentials.iot.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}",
+            "create_date": "2021-08-30T17:32:21Z",
+            "description": "IAM role for cameras that authenticate using certs.",
+            "force_detach_policies": false,
+            "id": "webrtc-camera-certificate-based-role",
+            "inline_policy": [
+              {
+                "name": "",
+                "policy": ""
+              }
+            ],
+            "managed_policy_arns": [],
+            "max_session_duration": 3600,
+            "name": "webrtc-camera-certificate-based-role",
+            "name_prefix": null,
+            "path": "/",
+            "permissions_boundary": null,
+            "tags": {
+              "cost_center": "vstream",
+              "environment": "staging-sandbox",
+              "module": "services/vstream",
+              "repo": "Verkada-Backend",
+              "service": "vstream",
+              "terraform": "true",
+              "vertical": "streaming"
+            },
+            "tags_all": {
+              "cost_center": "vstream",
+              "environment": "staging-sandbox",
+              "module": "services/vstream",
+              "repo": "Verkada-Backend",
+              "service": "vstream",
+              "terraform": "true",
+              "vertical": "streaming"
+            },
+            "unique_id": "AROAYQL6WTCUQGBKKVQDF"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iam_role_policy_attachment",
+      "name": "webrtc_camera_certificate_based_role_policy_attachment",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "webrtc-camera-certificate-based-role-20210830173222897000000001",
+            "policy_arn": "arn:aws:iam::584918145193:policy/webrtc-camera-policy",
+            "role": "webrtc-camera-certificate-based-role"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_policy.webrtc_camera_policy",
+            "aws_iam_role.webrtc_camera_certificate_based_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iot_certificate",
+      "name": "webrtc_camera_certificate",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "active": true,
+            "arn": "arn:aws:iot:us-west-2:584918145193:cert/fd5f0c5fd37718a3e70e8bb8269f9292474398de6c521ce76b36e335c9eed787",
+            "certificate_pem": "-----BEGIN CERTIFICATE-----\nMIIDWTCCAkGgAwIBAgIUI/L1X2bqinJRlhvCkda46swjv2YwDQYJKoZIhvcNAQEL\nBQAwTTFLMEkGA1UECwxCQW1hem9uIFdlYiBTZXJ2aWNlcyBPPUFtYXpvbi5jb20g\nSW5jLiBMPVNlYXR0bGUgU1Q9V2FzaGluZ3RvbiBDPVVTMB4XDTIxMDgzMDE3MzAy\nMVoXDTQ5MTIzMTIzNTk1OVowHjEcMBoGA1UEAwwTQVdTIElvVCBDZXJ0aWZpY2F0\nZTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL3ccvHSn+TKiGxKKJIV\noil64YANzNTMWbqFYHGZH+sF3lH9EUZaPJHoNaJVxry0DP4B0H/JxfE4zATsKxGo\nZdRNZiVrh9Ihm9oP8Y4212E7j6GdfiAE3wnPbPeG5ovcbcbze71va/he/Nyxdj8W\n8G/EjlQbNr4oQHWuLJ+O/HvJ7A5nd1/jk0/EaO9zadNGIAPSCVdBvw+gDcQkvpBc\nz3xHzvbb0jzG3Sf5folvc7Oia1t27ALDON1B9aAHhwqIY2yurkQfqkoqZrWdD1Fw\nXwp/DgnMWStprVHhZTZZn9Qy/ACbR0F1/Ggl3+lZYby5YC8U4A5kSdXwm0+V1alq\nDFkCAwEAAaNgMF4wHwYDVR0jBBgwFoAUNrt8zHPYvczqdz20QufHGhzgLYYwHQYD\nVR0OBBYEFFRjP80Hv55Rcd+tK5PpRnOdu8QBMAwGA1UdEwEB/wQCMAAwDgYDVR0P\nAQH/BAQDAgeAMA0GCSqGSIb3DQEBCwUAA4IBAQB0khNzu9+BJrt9UZPrekuAMGha\naohXivRq24K1DlivHb8PBNNuPhwfRimXv7xKGAyifZ5S1k1XTeQ/KPJrKCZvl7Ws\no0lDzeO0iuN+Knzl/52tLOYfnkmihXJam+igfwHIsV7/OfZf1p23pM/lf2sk+8Ow\nkVsKm3QUl4VDONuj8xbAZaXbSx8rKWoAybvDSekeDqv/gacYmTI/3OgUkgvGBGyD\nAoWJlr/gHzbdcy+r/DzoX/VNa96pq1+BoFREGsWR61vqi+XFJjOBykXkOzBio4zm\nKVc5K+RIbppCrc0tXYvac7tRQqiBFduaCbmNlJ1YuCIR91dGv9HQOb6SXM5w\n-----END CERTIFICATE-----\n",
+            "csr": null,
+            "id": "fd5f0c5fd37718a3e70e8bb8269f9292474398de6c521ce76b36e335c9eed787",
+            "private_key": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpQIBAAKCAQEAvdxy8dKf5MqIbEookhWiKXrhgA3M1MxZuoVgcZkf6wXeUf0R\nRlo8keg1olXGvLQM/gHQf8nF8TjMBOwrEahl1E1mJWuH0iGb2g/xjjbXYTuPoZ1+\nIATfCc9s94bmi9xtxvN7vW9r+F783LF2Pxbwb8SOVBs2vihAda4sn478e8nsDmd3\nX+OTT8Ro73Np00YgA9IJV0G/D6ANxCS+kFzPfEfO9tvSPMbdJ/l+iW9zs6JrW3bs\nAsM43UH1oAeHCohjbK6uRB+qSipmtZ0PUXBfCn8OCcxZK2mtUeFlNlmf1DL8AJtH\nQXX8aCXf6VlhvLlgLxTgDmRJ1fCbT5XVqWoMWQIDAQABAoIBAQCy3Hc88ZvIQjT7\nL3HBDbhTM3w00stgvZLacMRGwGadVk33F12q1V+yZPwCDqTHKSgEM1lkyYU8lrE9\nAfAhFm+37aKJJiAyCY91gwehXnDRHPdW3bPwHiawa0TQe7m9kM+qWb7823bv6Sx2\nDIjFLqsb4CPlgC22Pt1a/9byChY51oRy80GBH+SJq/5yGEqEhgIJCSvLZ6iCKqsx\nRcugwwJsBKBHHRE1h3pKRx1DN0/Y1r9trXXmKBbghZEEA21yQNDkC+AuLZR5Hbi1\nreNtMq2z1tBR7FkdViuuBSy4nem2etaKzDFUmLjSMZicbDjLuUZ/IWu5XiYcFjiT\nBUdrvqsxAoGBAORRWZky5yPmdLtlJu8xhbqdKuybTkHvVF1TthlJpsDI3WGgRHNS\n8CMaM8k/QSd6mzrnWK5Ic8389hXplUna4VgdMwJARm+s2Gz3kmLA3WSxiKdItCh6\nPRFvgTPi681MPZ1plULFtvyiqKWV96MJwFPyeWepzXRCjrZUA4p8k5zTAoGBANTh\ndgHqkjrtg3U5IjdXIWDpBQAWnFkT8VdkEmAvreaRSU3kk2OL8cMeb2GwMm50ehxA\nHkrqPA7F+RreBJGEchsyLEq7QyaVnYhIPUn7tXsO/Pw4rKtR031mJTxdUdlpmrl5\nAjgHRd403lvJiOYOoiEuyrHIzwdbTgnltC9GFsajAoGAbCBum1P1DRZt//V2i97b\nIzadhnJCjI1IWe50FePAehpmZX6eDDOiEC2visZPF+BDtZCsedVMKqh67oOxtMlY\n4P7rEkzYTrj/whM5G1WVQ8OkIP0YfPbvBtvUx3rXC2Ho6CyBiJ7T+y8ZSVoNbgQH\nNnplrodHCqEerxB4oNRAoAsCgYEAoFByGBtYqDv5xauTEu3w2xRgiaJ9d6/HDjL0\ni68cXQiIlbpPLKZVGMWwx3ZzZC8fTmsS5QPk2pNId20/L374l3Z/WIARn9sIWXtd\nfHusPdIZvq/HiPUEOelUnVMBsqMOvCJfA2amvSI/Wgw5plbazfZ4+s3o6vddm6J6\nwScdO9UCgYEAuA+sWBmeHTwPKqabgQJWkOzPYdj5T4QKtME/A6kypQF5S8JurErS\nJW879FJnuWU1RkZDA5UwfYLP7wqYKQkrZ3SCkidRCMFt7Fydfjj2uTlIEq68eRm9\nqyAwgCGaQOYFHVdQcfv1Tb52lCyk07c+V6OA+y39FeIx+yBgqpU2ymA=\n-----END RSA PRIVATE KEY-----\n",
+            "public_key": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvdxy8dKf5MqIbEookhWi\nKXrhgA3M1MxZuoVgcZkf6wXeUf0RRlo8keg1olXGvLQM/gHQf8nF8TjMBOwrEahl\n1E1mJWuH0iGb2g/xjjbXYTuPoZ1+IATfCc9s94bmi9xtxvN7vW9r+F783LF2Pxbw\nb8SOVBs2vihAda4sn478e8nsDmd3X+OTT8Ro73Np00YgA9IJV0G/D6ANxCS+kFzP\nfEfO9tvSPMbdJ/l+iW9zs6JrW3bsAsM43UH1oAeHCohjbK6uRB+qSipmtZ0PUXBf\nCn8OCcxZK2mtUeFlNlmf1DL8AJtHQXX8aCXf6VlhvLlgLxTgDmRJ1fCbT5XVqWoM\nWQIDAQAB\n-----END PUBLIC KEY-----\n"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA=="
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iot_policy",
+      "name": "webrtc_camera_iot_policy",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iot:us-west-2:584918145193:policy/webrtc-camera-iot-policy",
+            "default_version_id": "1",
+            "id": "webrtc-camera-iot-policy",
+            "name": "webrtc-camera-iot-policy",
+            "policy": "{\n   \"Version\":\"2012-10-17\",\n   \"Statement\": [\n      {\n        \"Effect\":\"Allow\",\n        \"Action\":[\n          \"iot:Connect\"\n        ],\n        \"Resource\":\"arn:aws:iot:us-west-2:584918145193:rolealias/webrtc-camera-certificate-based-role-alias\"\n      },\n      {\n        \"Effect\":\"Allow\",\n        \"Action\":[\n          \"iot:AssumeRoleWithCertificate\"\n        ],\n        \"Resource\":\"arn:aws:iot:us-west-2:584918145193:rolealias/webrtc-camera-certificate-based-role-alias\"\n      }\n   ]\n}\n"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_role.webrtc_camera_certificate_based_role",
+            "aws_iot_role_alias.webrtc_camera_certificate_based_role_alias"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iot_policy_attachment",
+      "name": "att",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "webrtc-camera-iot-policy|arn:aws:iot:us-west-2:584918145193:cert/fd5f0c5fd37718a3e70e8bb8269f9292474398de6c521ce76b36e335c9eed787",
+            "policy": "webrtc-camera-iot-policy",
+            "target": "arn:aws:iot:us-west-2:584918145193:cert/fd5f0c5fd37718a3e70e8bb8269f9292474398de6c521ce76b36e335c9eed787"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_role.webrtc_camera_certificate_based_role",
+            "aws_iot_certificate.webrtc_camera_certificate",
+            "aws_iot_policy.webrtc_camera_iot_policy",
+            "aws_iot_role_alias.webrtc_camera_certificate_based_role_alias"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iot_role_alias",
+      "name": "webrtc_camera_certificate_based_role_alias",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "alias": "webrtc-camera-certificate-based-role-alias",
+            "arn": "arn:aws:iot:us-west-2:584918145193:rolealias/webrtc-camera-certificate-based-role-alias",
+            "credential_duration": 3600,
+            "id": "webrtc-camera-certificate-based-role-alias",
+            "role_arn": "arn:aws:iam::584918145193:role/webrtc-camera-certificate-based-role"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iam_role.webrtc_camera_certificate_based_role"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iot_thing",
+      "name": "webrtc_camera",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iot:us-west-2:584918145193:thing/00000000-0000-0000-0000-000000000000",
+            "attributes": {
+              "CameraID": "00000000-0000-0000-0000-000000000000"
+            },
+            "default_client_id": "00000000-0000-0000-0000-000000000000",
+            "id": "00000000-0000-0000-0000-000000000000",
+            "name": "00000000-0000-0000-0000-000000000000",
+            "thing_type_name": "verkada-camera",
+            "version": 1
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iot_thing_type.verkada_camera"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iot_thing_principal_attachment",
+      "name": "webrtc_camera_certificate_attachment",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "id": "00000000-0000-0000-0000-000000000000|arn:aws:iot:us-west-2:584918145193:cert/fd5f0c5fd37718a3e70e8bb8269f9292474398de6c521ce76b36e335c9eed787",
+            "principal": "arn:aws:iot:us-west-2:584918145193:cert/fd5f0c5fd37718a3e70e8bb8269f9292474398de6c521ce76b36e335c9eed787",
+            "thing": "00000000-0000-0000-0000-000000000000"
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA==",
+          "dependencies": [
+            "aws_iot_certificate.webrtc_camera_certificate",
+            "aws_iot_thing.webrtc_camera",
+            "aws_iot_thing_type.verkada_camera"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_iot_thing_type",
+      "name": "verkada_camera",
+      "provider": "provider[\"registry.terraform.io/hashicorp/aws\"]",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "arn": "arn:aws:iot:us-west-2:584918145193:thingtype/verkada-camera",
+            "deprecated": false,
+            "id": "verkada-camera",
+            "name": "verkada-camera",
+            "properties": [
+              {
+                "description": "",
+                "searchable_attributes": []
+              }
+            ]
+          },
+          "sensitive_attributes": [],
+          "private": "bnVsbA=="
+        }
+      ]
+    }
+  ]
+}
