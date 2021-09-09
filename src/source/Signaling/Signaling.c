@@ -542,7 +542,6 @@ STATUS validateIceConfiguration(PSignalingClient pSignalingClient)
         CHK(pSignalingClient->iceConfigs[i].version <= SIGNALING_ICE_CONFIG_INFO_CURRENT_VERSION, STATUS_SIGNALING_INVALID_ICE_CONFIG_INFO_VERSION);
         CHK(pSignalingClient->iceConfigs[i].uriCount > 0, STATUS_SIGNALING_NO_CONFIG_URI_SPECIFIED);
         CHK(pSignalingClient->iceConfigs[i].uriCount <= MAX_ICE_CONFIG_URI_COUNT, STATUS_SIGNALING_MAX_ICE_URI_COUNT);
-
         minTtl = MIN(minTtl, pSignalingClient->iceConfigs[i].ttl);
     }
 
@@ -1009,9 +1008,10 @@ STATUS getIceConfig(PSignalingClient pSignalingClient, UINT64 time)
 
     THREAD_SLEEP_UNTIL(time);
 
+#ifndef VSTREAMRTC_AUTH
     // Check for the stale credentials
     CHECK_SIGNALING_CREDENTIALS_EXPIRATION(pSignalingClient);
-
+#endif
     ATOMIC_STORE(&pSignalingClient->result, (SIZE_T) SERVICE_CALL_RESULT_NOT_SET);
 
     // We are not caching ICE server config calls
@@ -1100,8 +1100,10 @@ STATUS connectSignalingChannel(PSignalingClient pSignalingClient, UINT64 time)
 
     THREAD_SLEEP_UNTIL(time);
 
+#ifndef VSTREAMRTC_AUTH
     // Check for the stale credentials
     CHECK_SIGNALING_CREDENTIALS_EXPIRATION(pSignalingClient);
+#endif
 
     ATOMIC_STORE(&pSignalingClient->result, (SIZE_T) SERVICE_CALL_RESULT_NOT_SET);
 
@@ -1174,4 +1176,40 @@ CleanUp:
 
     LEAVES();
     return retStatus;
+}
+
+STATUS vStreamrtcGetIceConfig(PSignalingClient pSignalingClient) {
+    // Generate dummy AWS credentials
+    if (pSignalingClient->pAwsCredentials == NULL) {
+        pSignalingClient->pAwsCredentials = (PAwsCredentials)MEMCALLOC(1, SIZEOF(AwsCredentials) + SIZEOF(CHAR) * (MAX_ACCESS_KEY_LEN + 1 + MAX_SECRET_KEY_LEN + 1));
+    }
+    // Set expiration 1 hour in the future (TODO: return expiration from vstreamrtc)
+    pSignalingClient->pAwsCredentials->expiration = (GETTIME() + 3600) * HUNDREDS_OF_NANOS_IN_A_SECOND;
+
+    // Statically assigned ice configs until vstreamrtc is available
+    pSignalingClient->iceConfigCount = 1;
+    pSignalingClient->iceConfigs[0].version = 0;
+    pSignalingClient->iceConfigs[0].uriCount = 3;
+    pSignalingClient->iceConfigs[0].ttl = 300 * HUNDREDS_OF_NANOS_IN_A_SECOND;
+
+    STRCPY(pSignalingClient->iceConfigs[0].uris[0], "turn:35-85-58-186.t-64dcfb3f.kinesisvideo.us-west-2.amazonaws.com:443?transport=udp");
+    STRCPY(pSignalingClient->iceConfigs[0].uris[1], "turns:35-85-58-186.t-64dcfb3f.kinesisvideo.us-west-2.amazonaws.com:443?transport=udp");
+    STRCPY(pSignalingClient->iceConfigs[0].uris[2], "turns:35-85-58-186.t-64dcfb3f.kinesisvideo.us-west-2.amazonaws.com:443?transport=tcp");
+
+    STRCPY(pSignalingClient->iceConfigs[0].userName, "1631168979:djE6YXJuOmF3czpraW5lc2lzdmlkZW86dXMtd2VzdC0yOjU4NDkxODE0NTE5MzpjaGFubmVsL2Rld2VpLXRlc3QtY2hhbm5lbC8xNjMwMzkwNzgzMzkx");
+    STRCPY(pSignalingClient->iceConfigs[0].password, "QWL58JsMKRYeCR+ySrgejame7Ma6WGK2VFaq0J7IJ5E=");
+
+    return STATUS_SUCCESS;
+}
+
+STATUS vStreamrtcGetPresignedChannelURI(PSignalingClient pSignalingClient) {
+    // Generate dummy AWS credentials
+    if (pSignalingClient->pAwsCredentials == NULL) {
+        pSignalingClient->pAwsCredentials = (PAwsCredentials)MEMCALLOC(1, SIZEOF(AwsCredentials) + SIZEOF(CHAR) * (MAX_ACCESS_KEY_LEN + 1 + MAX_SECRET_KEY_LEN + 1));
+    }
+    // Set expiration 1 hour in the future (TODO: return expiration from vstreamrtc)
+    pSignalingClient->pAwsCredentials->expiration = (GETTIME() + 3600) * HUNDREDS_OF_NANOS_IN_A_SECOND;
+
+    STRCPY(pSignalingClient->channelEndpointPresignedWss,
+           "wss://m-555f26aa.kinesisvideo.us-west-2.amazonaws.com?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-ChannelARN=arn%3Aaws%3Akinesisvideo%3Aus-west-2%3A584918145193%3Achannel%2Fdewei-test-channel%2F1630390783391&X-Amz-Credential=ASIAYQL6WTCUVJMVXWMN%2F20210911%2Fus-west-2%2Fkinesisvideo%2Faws4_request&X-Amz-Date=20210911T051828Z&X-Amz-Expires=604800&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEJ7%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEaCXVzLXdlc3QtMiJIMEYCIQDc6ApfBEgndm%2Bn7k7Kqd9drO%2BRcKDCssdqqJUx%2BlIDNgIhAIsZX87UPByHW5X9sTZ9nTn%2BOJgaKT%2B5rvfHaw%2FZFfdAKp8DCOb%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwEQABoMNTg0OTE4MTQ1MTkzIgzwm%2FeYy8WaWR97Ikcq8wJQQYsdyghuzoV0ad3VGN5ukhgVHr%2F%2BsGKHbopc2yDuj20NnzkJLX7e5O8AJtCsp9GHWdfVCLrg6%2Btd6gm6Ep5k2p%2FZxeHAaj%2Bl%2FArlLJw1fhj9zGbOHPjYRqgrgrHhIuOJtq8EPrTx%2BwcvEakG8EBtU1PXMKlAKDK1LC4FVFJhxJqkAHTy3ixuXUS9BDBRV5CnxkiusapZC8p1XT%2FBizuo4h6lUWbyIdLbC0%2FwluPZ%2BxFRnFVr9H%2FbtbQ5WpfA%2FIQsdhTdlob0hjTy098Y2bshvfUFlksPfn2BnJrYWqalBSp%2BZ2rnICExT0po9UMnuRbxpbHTY4zvG8t%2B9Th%2FfnY2MskD9SPKAiGQvvf9UNEWo4YXDN9un0u1O%2FWLWcaIXBRbDQNIy9fkukgvhKopyTjNUobf%2BGczXV0uAa3%2FY1SAezbUl8EAHcy32UcMYgtasrdUWpZA035hNwrkDqF8N4WmyZFRmDnqVnDf5hTcrbLi%2FEWHXjCd%2BPCJBjqlAY3hr9IDgHNPORsVATh1CKwkO1IHmQbgw4IuIatqI1NjpTL14mg2XzqrgHyrNmMDHsWq2hSQOndqKOYQZUDi%2F0nQUSm8EMX2Ukd3XcnyZmWHCQdM1JdkpCye%2FePJO54lUWsknRUaBDQMTljuQK0bbi7zpS3VXYdORIPJMufPqbHD5JTGlJd%2FfJMf%2FS4s7MiDfPnhEOchJ9pRNPu2GARdcnTC6HcINg%3D%3D&X-Amz-SignedHeaders=host&X-Amz-Signature=25561a70dc3e16b163ea9bccdc1dd8e06c5c8cde854c4c071fb937fe36594b55");
 }
