@@ -490,6 +490,8 @@ STATUS lwsCompleteSync(PLwsCallInfo pCallInfo)
 
         // Sign the request
         CHK_STATUS(signAwsRequestInfoQueryParam(pCallInfo->callInfo.pRequestInfo));
+        DLOGW("%s", pCallInfo->callInfo.pRequestInfo->url);
+        exit(0);
 
         // Remove the headers
         CHK_STATUS(removeRequestHeaders(pCallInfo->callInfo.pRequestInfo));
