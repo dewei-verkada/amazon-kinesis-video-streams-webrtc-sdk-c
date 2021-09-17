@@ -569,14 +569,7 @@ STATUS executeGetIceConfigSignalingState(UINT64 customData, UINT64 time)
                                                                             SIGNALING_CLIENT_STATE_GET_ICE_CONFIG));
     }
 
-    // Bypass fetching ice config when using vstreamrtc. TURN servers will be passed
-    // from the viewer through signaling channel as relay candidates.
-#ifdef VSTREAMRTC_AUTH
-    retStatus = STATUS_SUCCESS;
-    ATOMIC_STORE(&pSignalingClient->result, (SIZE_T)SERVICE_CALL_RESULT_OK);
-#else
     retStatus = getIceConfig(pSignalingClient, time);
-#endif
 
     CHK_STATUS(stepSignalingStateMachine(pSignalingClient, retStatus));
 
